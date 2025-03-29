@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aviator Game</title>
+    <title>Nova Prime Cash</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -61,10 +61,11 @@
         .bet-btn:hover, .cashout-btn:hover {
             background-color: #c70039;
         }
-        .balance {
+        .balance, .history, .leaderboard {
             font-size: 18px;
             margin: 10px;
             color: #ffcc00;
+            text-align: center;
         }
         footer {
             background-color: #0f3460;
@@ -87,6 +88,8 @@
         <button class="bet-btn" id="bet-btn">Place Bet</button>
         <button class="cashout-btn" id="cashout-btn" disabled>Cash Out</button>
     </div>
+    <div class="history">Game History:<ul id="history-list"></ul></div>
+    <div class="leaderboard">Top Winners:<ul id="leaderboard-list"></ul></div>
     
     <footer>
         <p>&copy; 2025 Aviator Game. All Rights Reserved.</p>
@@ -98,6 +101,8 @@
         let interval;
         let balance = 1000;
         let currentBet = 0;
+        let history = [];
+        let leaderboard = [];
 
         document.getElementById("bet-btn").addEventListener("click", function() {
             let betAmount = parseInt(document.getElementById("bet-amount").value);
@@ -121,6 +126,8 @@
                 balance += winnings;
                 document.getElementById("balance").textContent = balance;
                 alert("You cashed out at " + multiplier.toFixed(2) + "x and won KES " + winnings.toFixed(2));
+                updateHistory(multiplier.toFixed(2) + "x", winnings);
+                updateLeaderboard(winnings);
                 resetGame();
             }
         });
@@ -131,6 +138,7 @@
                 document.getElementById("multiplier").textContent = multiplier.toFixed(2) + "x";
                 if (Math.random() < 0.05) {
                     alert("Game Over! The plane crashed at " + multiplier.toFixed(2) + "x");
+                    updateHistory(multiplier.toFixed(2) + "x", 0);
                     resetGame();
                 }
             }, 500);
@@ -140,6 +148,25 @@
             clearInterval(interval);
             gameRunning = false;
             document.getElementById("cashout-btn").disabled = true;
+        }
+
+        function updateHistory(multiplier, winnings) {
+            let historyList = document.getElementById("history-list");
+            let listItem = document.createElement("li");
+            listItem.textContent = `Multiplier: ${multiplier}, Winnings: KES ${winnings}`;
+            historyList.prepend(listItem);
+        }
+
+        function updateLeaderboard(winnings) {
+            leaderboard.push(winnings);
+            leaderboard.sort((a, b) => b - a);
+            let leaderboardList = document.getElementById("leaderboard-list");
+            leaderboardList.innerHTML = "";
+            leaderboard.slice(0, 5).forEach((win, index) => {
+                let listItem = document.createElement("li");
+                listItem.textContent = `#${index + 1}: KES ${win}`;
+                leaderboardList.appendChild(listItem);
+            });
         }
     </script>
 </body>
