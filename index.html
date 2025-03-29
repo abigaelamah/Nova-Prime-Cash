@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nova Prime Cash</title>
+    <title>OPUNGA CRUSH</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -78,7 +78,7 @@
 </head>
 <body>
     <header>
-        <div class="logo">AVIATOR GAME</div>
+        <div class="logo">OPUNGA CRUSH</div>
     </header>
     
     <div class="balance">Balance: KES <span id="balance">1000</span></div>
@@ -90,6 +90,7 @@
     </div>
     <div class="history">Game History:<ul id="history-list"></ul></div>
     <div class="leaderboard">Top Winners:<ul id="leaderboard-list"></ul></div>
+    <div class="fake-winners">Recent Big Winners:<ul id="fake-winners-list"></ul></div>
     
     <footer>
         <p>&copy; 2025 Aviator Game. All Rights Reserved.</p>
@@ -103,6 +104,13 @@
         let currentBet = 0;
         let history = [];
         let leaderboard = [];
+        let fakeWinners = [
+            { name: "Tracy Opunga", amount: 50000, multiplier: 3.5 },
+            { name: "Rish Kamunge", amount: 75000, multiplier: 4.2 },
+            { name: "Khalif Kairo", amount: 100000, multiplier: 5.8 },
+            { name: "Trustpin Agency", amount: 60000, multiplier: 3.9 },
+            { name: "Cera Imani", amount: 90000, multiplier: 4.7 }
+        ];
 
         document.getElementById("bet-btn").addEventListener("click", function() {
             let betAmount = parseInt(document.getElementById("bet-amount").value);
@@ -150,24 +158,17 @@
             document.getElementById("cashout-btn").disabled = true;
         }
 
-        function updateHistory(multiplier, winnings) {
-            let historyList = document.getElementById("history-list");
-            let listItem = document.createElement("li");
-            listItem.textContent = `Multiplier: ${multiplier}, Winnings: KES ${winnings}`;
-            historyList.prepend(listItem);
-        }
-
-        function updateLeaderboard(winnings) {
-            leaderboard.push(winnings);
-            leaderboard.sort((a, b) => b - a);
-            let leaderboardList = document.getElementById("leaderboard-list");
-            leaderboardList.innerHTML = "";
-            leaderboard.slice(0, 5).forEach((win, index) => {
+        function updateFakeWinners() {
+            let fakeWinnersList = document.getElementById("fake-winners-list");
+            fakeWinnersList.innerHTML = "";
+            fakeWinners.forEach(winner => {
                 let listItem = document.createElement("li");
-                listItem.textContent = `#${index + 1}: KES ${win}`;
-                leaderboardList.appendChild(listItem);
+                listItem.textContent = `${winner.name} won KES ${winner.amount} at ${winner.multiplier}x`;
+                fakeWinnersList.appendChild(listItem);
             });
         }
+        
+        updateFakeWinners();
     </script>
 </body>
 </html>
