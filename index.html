@@ -4,34 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aviator Game</title>
-    <link rel="stylesheet" href="styles.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #121212;
+            background: linear-gradient(to bottom, #1a1a2e, #16213e);
             color: white;
-            text-align: center;
             margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
         }
         header {
-            background-color: #1f1f1f;
+            background-color: #0f3460;
             padding: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        nav a {
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
             color: #ffcc00;
-            text-decoration: none;
-            margin: 0 15px;
-            font-size: 18px;
+            margin-left: 20px;
         }
         .game-container {
-            margin: 50px auto;
+            margin: 20px;
             padding: 20px;
-            width: 80%;
+            width: 90%;
             max-width: 600px;
             background-color: #222;
             border-radius: 10px;
+            text-align: center;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            position: relative;
         }
         .multiplier {
             font-size: 36px;
@@ -53,30 +61,32 @@
         .bet-btn:hover, .cashout-btn:hover {
             background-color: #c70039;
         }
+        .balance {
+            font-size: 18px;
+            margin: 10px;
+            color: #ffcc00;
+        }
         footer {
-            margin-top: 50px;
+            background-color: #0f3460;
             padding: 20px;
-            background-color: #1f1f1f;
+            text-align: center;
+            width: 100%;
+            margin-top: auto;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Aviator Crash Game</h1>
-        <nav>
-            <a href="#game">Play</a>
-            <a href="#login">Login</a>
-            <a href="#signup">Sign Up</a>
-        </nav>
+        <div class="logo">AVIATOR GAME</div>
     </header>
     
-    <section id="game">
-        <div class="game-container">
-            <div class="multiplier" id="multiplier">1.00x</div>
-            <button class="bet-btn" id="bet-btn">Place Bet</button>
-            <button class="cashout-btn" id="cashout-btn" disabled>Cash Out</button>
-        </div>
-    </section>
+    <div class="balance">Balance: KES <span id="balance">1000</span></div>
+    <div class="game-container">
+        <div class="multiplier" id="multiplier">1.00x</div>
+        <input type="number" id="bet-amount" placeholder="Enter Bet Amount" min="10" max="1000">
+        <button class="bet-btn" id="bet-btn">Place Bet</button>
+        <button class="cashout-btn" id="cashout-btn" disabled>Cash Out</button>
+    </div>
     
     <footer>
         <p>&copy; 2025 Aviator Game. All Rights Reserved.</p>
@@ -86,20 +96,31 @@
         let multiplier = 1.00;
         let gameRunning = false;
         let interval;
+        let balance = 1000;
+        let currentBet = 0;
 
         document.getElementById("bet-btn").addEventListener("click", function() {
-            if (!gameRunning) {
+            let betAmount = parseInt(document.getElementById("bet-amount").value);
+            if (!gameRunning && betAmount > 0 && betAmount <= balance) {
+                balance -= betAmount;
+                document.getElementById("balance").textContent = balance;
+                currentBet = betAmount;
                 gameRunning = true;
                 multiplier = 1.00;
                 document.getElementById("multiplier").textContent = multiplier.toFixed(2) + "x";
                 document.getElementById("cashout-btn").disabled = false;
                 startGame();
+            } else {
+                alert("Invalid bet amount!");
             }
         });
 
         document.getElementById("cashout-btn").addEventListener("click", function() {
             if (gameRunning) {
-                alert("You cashed out at " + multiplier.toFixed(2) + "x");
+                let winnings = currentBet * multiplier;
+                balance += winnings;
+                document.getElementById("balance").textContent = balance;
+                alert("You cashed out at " + multiplier.toFixed(2) + "x and won KES " + winnings.toFixed(2));
                 resetGame();
             }
         });
